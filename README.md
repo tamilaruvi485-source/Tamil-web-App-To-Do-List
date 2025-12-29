@@ -1,4 +1,4 @@
-# Colorful To-Do List Web App
+# To-Do List Web App
 
 A **modern, colorful, and lightweight To-Do List Web Application** built as part of the **RISE 3.0 Internship – Web Development Project**.  
 This application helps users manage daily tasks efficiently with a clean UI and offline support.
