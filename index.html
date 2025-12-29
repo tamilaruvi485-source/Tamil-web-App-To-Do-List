@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Colorful To-Do List</title>
+
+<style>
+body{
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    background: white;
+    width: 350px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align: center;
+    color: #5a2ea6;
+}
+
+.input-box{
+    display: flex;
+    margin-top: 15px;
+}
+
+input{
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #764ba2;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+}
+
+.input-box button{
+    background: #764ba2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+.input-box button:hover{
+    background: #5a2ea6;
+}
+
+.filters{
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.filters button{
+    flex: 1;
+    margin: 2px;
+    border: none;
+    padding: 8px;
+    background: #e0d7f7;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.filters button:hover{
+    background: #764ba2;
+    color: white;
+}
+
+ul{
+    padding: 0;
+}
+
+li{
+    list-style: none;
+    background: #f4f2ff;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li span{
+    cursor: pointer;
+}
+
+.completed{
+    text-decoration: line-through;
+    color: gray;
+}
+
+li button{
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+footer{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #764ba2;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>✨ My To-Do List</h1>
+
+    <div class="input-box">
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button onclick="addTask()">➕</button>
+    </div>
+
+    <div class="filters">
+        <button onclick="filterTasks('all')">All</button>
+        <button onclick="filterTasks('completed')">Completed</button>
+        <button onclick="filterTasks('pending')">Pending</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <footer>
+        Developed by <strong>TAMILARUVI.S</strong>
+    </footer>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks(){
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderTasks(filter="all"){
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    tasks.forEach((task,index)=>{
+        if(filter==="completed" && !task.completed) return;
+        if(filter==="pending" && task.completed) return;
+
+        const li = document.createElement("li");
+        li.className = task.completed ? "completed" : "";
+
+        li.innerHTML = `
+            <span onclick="toggleTask(${index})">${task.text}</span>
+            <button onclick="deleteTask(${index})">❌</button>
+        `;
+        taskList.appendChild(li);
+    });
+}
+
+function addTask(){
+    const input = document.getElementById("taskInput");
+    if(input.value==="") return;
+
+    tasks.push({
+        text: input.value,
+        completed:false,
+        time:new Date().toLocaleString()
+    });
+
+    input.value="";
+    saveTasks();
+    renderTasks();
+}
+
+function toggleTask(index){
+    tasks[index].completed = !tasks[index].completed;
+    saveTasks();
+    renderTasks();
+}
+
+function deleteTask(index){
+    tasks.splice(index,1);
+    saveTasks();
+    renderTasks();
+}
+
+function filterTasks(type){
+    renderTasks(type);
+}
+
+renderTasks();
+</script>
+
+</body>
+</html>
